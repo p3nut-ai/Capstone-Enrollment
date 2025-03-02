@@ -159,11 +159,9 @@
   <!-- SCRIPTS -->
   <script>
     function assignPayment(subjectCode) {
-      // Replace with your API call or further logic
       alert("Payment scheme and plan assigned for " + subjectCode);
     }
     
-    // Remove fallback row if there are entries
     document.addEventListener('DOMContentLoaded', () => {
       const table = document.getElementById('financeTableBody');
       if (table.querySelectorAll('tr').length > 1) {
