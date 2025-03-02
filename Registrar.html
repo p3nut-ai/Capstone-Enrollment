@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Registrar Verification Dashboard</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: {
+              DEFAULT: '#0A1629',
+              50: '#F5F7FA'
+            },
+            action: {
+              DEFAULT: '#4B76F6',
+              hover: '#3961E3'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+  <!-- HEADER -->
+  <header class="sticky top-0 z-10 bg-gradient-to-r from-navy to-gray-900">
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 md:px-6">
+      <!-- Title -->
+      <div class="flex items-center gap-4">
+        <h1 class="text-xl font-bold text-white">Registrar Verification</h1>
+      </div>
+     
+    </div>
+    <!-- Mobile Search -->
+    <div class="block sm:hidden px-4 pb-3">
+      <input
+        type="search"
+        placeholder="Search professors..."
+        class="w-full rounded-md bg-white/10 px-4 py-2 text-sm text-white placeholder-gray-200 focus:outline-none focus:ring-2 focus:ring-action/50"
+      />
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="mx-auto w-full max-w-7xl flex-1 px-4 py-6 md:px-6 md:py-8">
+    <!-- Table Card -->
+    <div class="rounded-lg border border-gray-200 bg-white shadow-sm">
+      <div class="p-6">
+        <div class="mb-6 flex items-center gap-3">
+          <i data-lucide="check-square" class="h-6 w-6 text-action"></i>
+          <div>
+            <h2 class="text-lg font-semibold text-gray-900">Submitted Subject Offerings</h2>
+            <p class="text-sm text-gray-500">
+              Review submitted offerings. Click on the professor name for details.
+            </p>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm text-gray-700">
+            <thead>
+              <tr class="border-b border-gray-200 bg-gray-50 text-xs uppercase tracking-wider text-gray-500">
+                <th class="p-3 font-medium">Professor Name</th>
+                <th class="p-3 font-medium">Course</th>
+                <th class="p-3 font-medium">Year</th>
+                <th class="p-3 font-medium">Units Total</th>
+                <th class="p-3 font-medium">Status</th>
+                <th class="p-3 font-medium text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="subjectOfferingsTable">
+              <!-- Example Row 1 -->
+              <tr class="border-b border-gray-200 hover:bg-gray-50">
+                <!-- Clickable Professor Name -->
+                <td class="p-3 text-blue-500 cursor-pointer hover:underline" onclick="showUserSubjects('Professor Smith')">
+                  Professor user1
+                </td>
+                <td class="p-3 text-gray-900">BS Computer Science</td>
+                <td class="p-3 text-gray-900">3</td>
+                <td class="p-3 text-gray-900">12</td>
+                <td class="p-3 text-left">
+                  <span class="rounded-full bg-yellow-100 px-3 py-1 text-xs font-medium text-yellow-800 border border-yellow-200">
+                    Pending
+                  </span>
+                </td>
+                <td class="p-3 text-right">
+                  <button onclick="approveSubject('Professor Smith')" class="mr-2 rounded bg-green-500 px-3 py-1 text-xs font-medium text-white hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-200">
+                    Approve
+                  </button>
+                  <button onclick="denySubject('Professor Smith')" class="rounded bg-red-500 px-3 py-1 text-xs font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-200">
+                    Deny
+                  </button>
+                </td>
+              </tr>
+              <!-- Example Row 2 -->
+              <tr class="border-b border-gray-200 hover:bg-gray-50">
+                <!-- Clickable Professor Name -->
+                <td class="p-3 text-blue-500 cursor-pointer hover:underline" onclick="showUserSubjects('Professor Johnson')">
+                    Professor user1
+                </td>
+                <td class="p-3 text-gray-900">BS Information Technology</td>
+                <td class="p-3 text-gray-900">2</td>
+                <td class="p-3 text-gray-900">9</td>
+                <td class="p-3 text-left">
+                  <span class="rounded-full bg-yellow-100 px-3 py-1 text-xs font-medium text-yellow-800 border border-yellow-200">
+                    Pending
+                  </span>
+                </td>
+                <td class="p-3 text-right">
+                  <button onclick="approveSubject('Professor Johnson')" class="mr-2 rounded bg-green-500 px-3 py-1 text-xs font-medium text-white hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-200">
+                    Approve
+                  </button>
+                  <button onclick="denySubject('Professor Johnson')" class="rounded bg-red-500 px-3 py-1 text-xs font-medium text-white hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-200">
+                    Deny
+                  </button>
+                </td>
+              </tr>
+              <!-- Fallback row if no offerings -->
+              <tr id="noOfferingsRow">
+                <td colspan="6" class="py-8 text-center text-gray-500">
+                  No subject offerings to review.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal for displaying professor's subjects -->
+  <div id="userModal" class="fixed inset-0 hidden items-center justify-center bg-black bg-opacity-50">
+    <div class="bg-white rounded-lg shadow-lg max-w-lg w-full p-6">
+      <div class="flex justify-between items-center mb-4">
+        <h3 id="modalTitle" class="text-xl font-semibold text-gray-900">Subjects Submitted by</h3>
+        <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600">
+          <i data-lucide="x" class="h-5 w-5"></i>
+        </button>
+      </div>
+      <div id="modalContent">
+        <ul id="userSubjectsList" class="space-y-2">
+          <!-- Subjects will be dynamically populated here -->
+        </ul>
+      </div>
+      <div class="mt-4 text-right">
+        <button onclick="closeModal()" class="rounded bg-action px-4 py-2 text-sm font-medium text-white hover:bg-action/90 focus:outline-none focus:ring-2 focus:ring-action/50">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script>
+    // Sample functions for Approve/Deny actions.
+    function approveSubject(professorName) {
+      alert("Approved subjects for " + professorName + ". Forwarding to Finance.");
+    }
+    
+    function denySubject(professorName) {
+      alert("Denied subjects for " + professorName + ". Returning to professor for adjustments.");
+    }
+
+    // Sample mapping of professor names to their submitted subjects.
+    const professorSubjects = {
+      "Professor Smith": [
+        "DBMS1 - Fundamentals of Database Systems",
+        "SIA2 - Advanced Database Management"
+      ],
+      "Professor Johnson": [
+        "IT101 - Introduction to Programming",
+        "NET201 - Networking Fundamentals"
+      ]
+    };
+
+    function showUserSubjects(professorName) {
+      const modal = document.getElementById('userModal');
+      const modalTitle = document.getElementById('modalTitle');
+      const userSubjectsList = document.getElementById('userSubjectsList');
+
+      modalTitle.textContent = `Subjects Submitted by ${professorName}`;
+      userSubjectsList.innerHTML = '';
+
+      const subjects = professorSubjects[professorName] || ["No subjects found."];
+      subjects.forEach(subject => {
+        const li = document.createElement('li');
+        li.className = 'text-gray-700';
+        li.textContent = subject;
+        userSubjectsList.appendChild(li);
+      });
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      lucide.createIcons();
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('userModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    // Optionally remove fallback row if there are entries.
+    document.addEventListener('DOMContentLoaded', () => {
+      const table = document.getElementById('subjectOfferingsTable');
+      if (table.querySelectorAll('tr').length > 2) {
+        const fallback = document.getElementById('noOfferingsRow');
+        if (fallback) fallback.remove();
+      }
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>
